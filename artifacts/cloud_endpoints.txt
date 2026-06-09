@@ -1,0 +1,16 @@
+https://api.afm.aiml.apple.com/llmqu-memory-creation/api/v1/
+https://api.afm.aiml.apple.com/photos-intelligence-storytelling/api/v1/
+https://api.afm.aiml.apple.com/sage-answer-synthesis/api/v1/
+https://api.afm.aiml.apple.com/v1/
+https://api.smoot.apple.cn/bag
+https://api.smoot.apple.com
+https://api.smoot.apple.com/
+https://api.smoot.apple.com/../
+https://api.smoot.apple.com/bag
+https://api.smoot.apple.com/fb
+https://api.smoot.apple.com/search
+https://api.smoot.apple.com/user
+https://cdn2.smoot.apple.com/image
+https://falcon-ci.smoot.apple.com
+https://gr-g-carry.smoot.apple.com/v1
+https://gr-g-carry.smoot.apple.com/v1/

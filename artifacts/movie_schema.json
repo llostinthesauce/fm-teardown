@@ -1,0 +1,26 @@
+{
+  "type" : "object",
+  "title" : "Movie",
+  "x-order" : [
+    "title",
+    "year",
+    "rewatchable"
+  ],
+  "properties" : {
+    "rewatchable" : {
+      "type" : "boolean"
+    },
+    "title" : {
+      "type" : "string"
+    },
+    "year" : {
+      "type" : "integer"
+    }
+  },
+  "required" : [
+    "title",
+    "year",
+    "rewatchable"
+  ],
+  "additionalProperties" : false
+}

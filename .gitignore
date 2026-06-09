@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+.AppleDouble
+._*
+
+# Bulk raw string dump extracted from Apple binaries (1.5 MB).
+# Excluded by default to avoid redistributing bulk binary-derived content;
+# the curated artifacts/ lists carry the actual findings.
+# Remove this line if you intentionally want to publish it.
+artifacts/fw_strings_model.txt
+
+# Editor / tooling
+*.swp
+*~
+.vscode/
+.idea/
