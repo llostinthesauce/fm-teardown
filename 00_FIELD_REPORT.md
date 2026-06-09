@@ -103,18 +103,25 @@ Key insight for the routing question you asked: **`fm` does not route.** It pins
 ## 5. File map of this research folder
 
 ```
-fm-research/
+fm-teardown/
+├── README.md                 ← start here
 ├── 00_FIELD_REPORT.md        ← this file (consolidated, corrected conclusions)
 ├── 01_CLI_REFERENCE.md       ← every command, every flag, the serve API, copy-paste recipes
 ├── 02_MODEL_ARCHITECTURE.md  ← model catalog, tiers, adapters, Siri routing, PCC trust
-├── ORIGINAL_NOTES.md         ← your pasted session notes, verbatim
+├── ORIGINAL_NOTES.md         ← earlier behavioral session notes (host specs redacted)
+├── DISCLAIMER.md             ← scope, copyright, trademark, no-affiliation
+├── CONTRIBUTING.md           ← how to submit findings from other builds
+├── LICENSE                   ← MIT
 ├── logs/
-│   └── serve.log             ← captured fm serve output
+│   └── serve.log             ← captured fm serve output (loopback only)
 └── artifacts/
     ├── fm_model_ids.txt       ← 1,037 com.apple.fm.* model-catalog identifiers (raw evidence)
     ├── pcc_use_cases.txt      ← 193 cloud/PCC instruct_server use-cases
     ├── cloud_endpoints.txt    ← afm.aiml.apple.com / smoot.apple.com endpoints
     ├── siri_pcc_models.txt    ← llm_siri_pcc + lw_planner_v1..v5
-    ├── fw_strings_model.txt    ← framework model/session/catalog symbols
-    └── movie_schema.json       ← sample guided-generation schema (round-tripped live)
+    └── movie_schema.json      ← sample guided-generation schema (round-tripped live)
 ```
+
+> A 1.5 MB raw string dump (`artifacts/fw_strings_model.txt`) is kept locally but
+> excluded from the repo (see `.gitignore`) to avoid redistributing bulk
+> binary-derived content; the curated lists above carry the findings.

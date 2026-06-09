@@ -90,6 +90,10 @@ for f in "$CACHE"/dyld_shared_cache_arm64e*; do strings -a "$f"; done \
 
 ---
 
+## Contributing
+
+These are notes from one macOS 27 build — findings from **other builds, hardware, or a PCC-enabled host** are very welcome. See **[CONTRIBUTING](CONTRIBUTING.md)** for what's useful and the ground rules (no proprietary content, keep the evidence grading, show your build).
+
 ## What's *not* here
 
 - No model weights, no extracted Apple source, no proprietary assets.
