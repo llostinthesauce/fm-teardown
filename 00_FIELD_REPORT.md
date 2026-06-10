@@ -23,7 +23,9 @@ It exposes **two execution tiers**, not two models:
 | `system`  | On-device inference via `FoundationModels` → `ModelCatalog`. **Available now.** |
 | `pcc`     | Private Cloud Compute inference. **Gated by attestation/trust — unavailable in this context.** |
 
-The user's original hypothesis ("Apple exposes execution environments, not models") is **confirmed correct**. What the original notes could *not* see — and what string analysis now reveals — is the **full model zoo** sitting behind those two tiers: at least **four on-device size tiers (9M / 85M / 300M / 3B)**, a separate **code-model family**, **vision** and **speech** models, and a **193-use-case cloud/PCC adapter catalog**, all selected by a Siri-side **orchestration router**, never by `fm`.
+The original hypothesis ("Apple exposes execution environments, not models") is **confirmed correct**. What the original notes could *not* see — and what string analysis now reveals — is the **full model zoo** sitting behind those two tiers: at least **four on-device size tiers (9M / 85M / 300M / 3B)**, a separate **code-model family**, **vision** and **speech** models, and a **193-use-case cloud/PCC adapter catalog**, all selected by a Siri-side **orchestration router**, never by `fm`.
+
+These findings are now **cross-referenced against Apple's official writeup** ([*Introducing the third generation of Apple Foundation Models*](https://machinelearning.apple.com/research/introducing-third-generation-of-apple-foundation-models)) — see **[`03_OFFICIAL_CROSSREF.md`](03_OFFICIAL_CROSSREF.md)**. The mapping is clean: `instruct_3b` dense = **AFM 3 Core** (3B); `instruct_3b` sparse = **AFM 3 Core Advanced** (20B, 1–4B active); `instruct_server_v1/v2` = **AFM 3 Cloud / Cloud Pro**; the `adm_*` adapters feed **ADM 3 Cloud** (image). Our analysis additionally documents the CLI, `fm serve`, speculative-decoding `.draft` models, PCC attestation, and Siri routing — none of which the post covers.
 
 ---
 
@@ -36,7 +38,7 @@ The original field report (preserved verbatim in `ORIGINAL_NOTES.md`) was a good
 | "system vs pcc — PCC slightly slower, no quality jump" | **Could not be this machine.** Here, `pcc` is *unavailable* (`pccCallerNotTrusted` / "PCC inference is not available in this context"). Any earlier PCC output came from a differently-provisioned device/session. **[OBSERVED]** |
 | "Only two models exist; everything else is internal" (framed as uncertainty) | **Two execution *tiers*, many models.** The `ModelCatalog` enumerates 1,000+ resource IDs: tiers `instruct_9m / 85m / 300m / 3b`, `instruct_server*`, code models, vision, speech. **[STRINGS]** |
 | "system ≠ a single small model; likely a router over configs" | **Correct, and now concrete:** a shared base model per size tier + dozens of swappable **adapters** (LoRA-style), plus `.draft` speculative-decoding twins. **[STRINGS]** |
-| "Core Advanced = 20B sparse, not observed" | The on-device sparse model is the **3B tier**, which ships as a **dense (`.generic`) + sparse (`.generic_sparse`) pair** (116 of its 411 catalog IDs are sparse). No 20B on-device asset appears. The "20B" figure is not represented in this build's on-device catalog. **[STRINGS]** |
+| "Core Advanced = 20B sparse, not observed" | **Now reconciled with Apple's official post** (`03_OFFICIAL_CROSSREF.md`). The `instruct_3b` tier ships a **dense (`.generic`) + sparse (`.generic_sparse`) pair** = **AFM 3 Core** (3B dense) + **AFM 3 Core Advanced** (Apple's **20B sparse**, 1–4B active, NAND-resident). The catalog labels it by *active* scale, so the 20B *looked* absent — an earlier version of these notes wrongly said "no 20B appears." It's there, just not named "20b." **[STRINGS + OFFICIAL]** |
 | "fm serve likely OpenAI-compatible, probably /v1/chat/completions" | **Confirmed and fully tested.** OpenAI Chat Completions API with streaming, usage accounting, and OpenAI-style error envelopes. TCP **and** Unix-socket transports. **[OBSERVED]** |
 | "no visible scaling with task complexity → hard inference caps" | More likely: `fm` always binds the **same general-purpose adapter on one tier**. The complexity-based escalation lives in the **Siri orchestration router**, which `fm` does not invoke. **[INFERRED from STRINGS]** |
 
@@ -108,6 +110,7 @@ fm-teardown/
 ├── 00_FIELD_REPORT.md        ← this file (consolidated, corrected conclusions)
 ├── 01_CLI_REFERENCE.md       ← every command, every flag, the serve API, copy-paste recipes
 ├── 02_MODEL_ARCHITECTURE.md  ← model catalog, tiers, adapters, Siri routing, PCC trust
+├── 03_OFFICIAL_CROSSREF.md   ← our findings mapped to Apple's official 3rd-gen post
 ├── ORIGINAL_NOTES.md         ← earlier behavioral session notes (host specs redacted)
 ├── DISCLAIMER.md             ← scope, copyright, trademark, no-affiliation
 ├── CONTRIBUTING.md           ← how to submit findings from other builds

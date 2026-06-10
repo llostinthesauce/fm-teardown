@@ -13,7 +13,7 @@ Everything here was derived from **publicly-shipped macOS binaries** using stand
 - **`fm` is a thin Apple-signed CLI** over the public `FoundationModels.framework`. It adds no models — it's a developer front door to the same stack Siri and Apple Intelligence use.
 - It exposes **two execution *tiers*, not two models**: `system` (on-device) and `pcc` (Private Cloud Compute).
 - Behind those tiers, the `ModelCatalog` enumerates a real **model zoo**: on-device language tiers **`instruct_9m / 85m / 300m / 3b`**, a separate **code-model** family, **vision** and **speech** models, and a **193-use-case cloud/PCC adapter catalog**.
-- The 3B on-device model ships as a **dense + sparse pair** (`.generic` / `.generic_sparse`), with **`.draft`** speculative-decoding twins for low latency (~0.26 s short completions measured).
+- The 3B on-device tier ships as a **dense + sparse pair** — cross-referenced to Apple's post, that's **AFM 3 Core** (3B dense) + **AFM 3 Core Advanced** (20B sparse, 1–4B active) — with **`.draft`** speculative-decoding twins for low latency (~0.26 s short completions measured).
 - **`fm` does not route** between models — it pins one tier. The real local↔cloud routing is a **Siri-side orchestration layer** (`ORCHNLRouterBridge` → `serverFallback` → PCC), gated by **attestation** (`TC2XPCTrustedRequestProtocol`, coherence tokens).
 - **`fm serve`** is a working **OpenAI Chat-Completions API** server (streaming + non-streaming, real token accounting, TCP or Unix socket) — drop-in for OpenAI-compatible agent frameworks.
 
@@ -26,6 +26,7 @@ Everything here was derived from **publicly-shipped macOS binaries** using stand
 | **[00 — Field Report](00_FIELD_REPORT.md)** | Consolidated, evidence-graded conclusions; corrections to common assumptions; the big-picture diagram; honest limits. |
 | **[01 — CLI Reference](01_CLI_REFERENCE.md)** | Every command and flag, the in-REPL slash commands, and the full `fm serve` API with verified request/response examples. |
 | **[02 — Model Architecture](02_MODEL_ARCHITECTURE.md)** | The `ModelCatalog` layering, on-device size tiers + adapters, the code/vision/speech families, the PCC tier, trust/attestation, and how Siri routes local↔cloud. |
+| **[03 — Official Cross-Reference](03_OFFICIAL_CROSSREF.md)** | Our findings mapped to [Apple's third-gen Foundation Models post](https://machinelearning.apple.com/research/introducing-third-generation-of-apple-foundation-models): model-name reconciliation (Core / Core Advanced / Cloud / Cloud Pro / ADM), what Apple confirms, what we add, and corrections it forces. |
 | **[Original Notes](ORIGINAL_NOTES.md)** | The earlier behavioral session notes that seeded this (host specs redacted), kept for provenance. |
 
 ### Evidence grading
