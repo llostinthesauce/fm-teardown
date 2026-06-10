@@ -15,7 +15,7 @@ Everything here was derived from **publicly-shipped macOS binaries** using stand
 - Behind those tiers, the `ModelCatalog` enumerates a real **model zoo**: on-device language tiers **`instruct_9m / 85m / 300m / 3b`**, a separate **code-model** family, **vision** and **speech** models, and a **193-use-case cloud/PCC adapter catalog**.
 - The 3B on-device tier ships as a **dense + sparse pair** — cross-referenced to Apple's post, that's **AFM 3 Core** (3B dense) + **AFM 3 Core Advanced** (20B sparse, 1–4B active) — with **`.draft`** speculative-decoding twins for low latency (~0.26 s short completions measured).
 - **`fm` does not route** between models — it pins one tier. The real local↔cloud routing is a **Siri-side orchestration layer** (`ORCHNLRouterBridge` → `serverFallback` → PCC), gated by **attestation** (`TC2XPCTrustedRequestProtocol`, coherence tokens).
-- **`fm serve`** is a working **OpenAI Chat-Completions API** server (streaming + non-streaming, real token accounting, TCP or Unix socket) — drop-in for OpenAI-compatible agent frameworks.
+- **`fm serve`** is a working **OpenAI Chat-Completions API** server (streaming + non-streaming, real token accounting, TCP or Unix socket) — drop-in for OpenAI-compatible clients, but **chat-only**: any request with a `tools` array is 400-rejected (`Invalid tool definition`), so agent frameworks must be configured to omit tool definitions entirely.
 
 ---
 

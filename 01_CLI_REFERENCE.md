@@ -165,6 +165,13 @@ curl -s localhost:PORT/v1/chat/completions -H 'Content-Type: application/json' -
 ```
 Accepted/honored params seen: `model`, `messages` (system/user/assistant roles), `temperature`, `max_tokens`, `stream`.
 
+**No tool calling** — any request containing a `tools` array is rejected at parse time with HTTP 400, even a minimal spec-valid OpenAI function definition:
+```json
+{"error":{"type":"invalid_request_error","code":"400",
+          "message":"Invalid tool definition: The data couldn’t be read because it is missing."}}
+```
+The rejection happens before model availability is checked: a `tools` request against the gated `pcc` tier returns this 400, not the 503 below. **[OBSERVED]**
+
 **Streaming** — standard SSE `data:` frames with OpenAI delta objects:
 ```
 data: {"id":"chatcmpl-…","choices":[{"delta":{"role":"assistant"}}],"model":"system"}
@@ -190,3 +197,16 @@ export OPENAI_API_KEY="not-checked"      # no auth enforced on localhost
 ```
 For local Python, prefer the Unix socket (`--socket /tmp/fm.sock`) per Apple's own help note.
 **Note:** no API-key check is performed — bind to `127.0.0.1`, not `0.0.0.0`, unless you intend to expose it.
+
+**Chat-only caveat:** because `tools` arrays are 400-rejected (see above), agent frameworks that attach tool definitions to every request — including built-in/internal tools that per-agent tool toggles don't remove — fail on every call. Configure the client to omit tools entirely; e.g. in opencode, set `"tool_call": false` on the model entry (a per-agent `"tools": {"*": false}` is **not** sufficient):
+```jsonc
+// opencode.json provider entry
+"fm": {
+  "npm": "@ai-sdk/openai-compatible",
+  "options": { "baseURL": "http://127.0.0.1:1976/v1", "apiKey": "not-checked" },
+  "models": {
+    "system": { "tool_call": false },
+    "pcc":    { "tool_call": false }
+  }
+}
+```
